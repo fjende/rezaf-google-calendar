@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import GoogleLogin from 'react-google-login'
-import { CLIENT_ID } from '../../../api';
+import { CLIENT_ID, SCOPES } from '../../../Config';
 import { Jumbotron, Button } from 'react-bootstrap';
 
 export default function Login(props) {
@@ -12,8 +12,8 @@ export default function Login(props) {
     });
 
     const responseSuccess = async (response) => {
-        console.log(response);
         sessionStorage.setItem('loggedIn', true);
+        sessionStorage.setItem('accessToken', response.accessToken)
         props.history.push('/home');
     }
 
@@ -23,8 +23,8 @@ export default function Login(props) {
 
     return (
         <div>
-            <Jumbotron >
-                <h1 className="display-3">Hello, world!</h1>
+            <Jumbotron style={{ backgroundColor: "light" }}>
+                <h1 className="display-4">Hello, world!</h1>
                 <p className="lead">Welcome to my demo Google Calendar Apllication.</p>
                 <p>This app was made for a React Engineer assigment @ Ars Futura, in February 2020.</p>
                 <p className="lead">
@@ -36,6 +36,7 @@ export default function Login(props) {
                         )}
                         onSuccess={responseSuccess}
                         onFailure={responseFailure}
+                        scope={SCOPES}
                         cookiePolicy={'single_host_origin'}
                     />
                 </p>
