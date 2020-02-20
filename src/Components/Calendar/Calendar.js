@@ -21,7 +21,7 @@ function Calendar(props) {
     const getEventList = async () => {
         console.log(dayRange)
         await axios.request({
-            url: `${API_ENDPOINT}/${CALENDAR_ID}/events?maxResults=11&orderBy=startTime&singleEvents=true&timeMin=${moment().startOf("day").toISOString()}&timeMax=${moment()
+            url: `${API_ENDPOINT}/${CALENDAR_ID}/events?maxResults=11&orderBy=startTime&singleEvents=true&timeMin=${moment().startOf("day").toISOString()}&timeMax=${moment().add(dayRange, 'd')
                 .endOf("day")
                 .toISOString()}&key=${API_KEY}`,
             headers: {
