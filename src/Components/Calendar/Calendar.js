@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Event from './Event'
+import EventListSlider from './EventListSlider'
 import AddEventModal from './AddEventModal'
 import moment from 'moment'
 import { API_KEY, CALENDAR_ID, API_ENDPOINT } from '../../Config'
@@ -20,7 +21,6 @@ function Calendar(props) {
     const [dayRange, setDayRange] = useState(7);
 
     const getEventList = async () => {
-        console.log(dayRange)
         await axios.request({
             url: `${API_ENDPOINT}/${CALENDAR_ID}/events?maxResults=11&orderBy=startTime&singleEvents=true&timeMin=${moment().startOf("day").toISOString()}&timeMax=${moment().add(dayRange, 'd')
                 .endOf("day")
@@ -31,26 +31,7 @@ function Calendar(props) {
             method: 'GET'
         }).then(
             response => {
-                console.log(response.data.items);
-                console.log(groupBy(response.data.items, d => moment(d.start.dateTime).startOf("isoWeek")));
-                setEventData(response.data.items);
-            },
-            function (reason) {
-                console.log(reason);
-            }
-        );
-    }
-
-    const handleDelete = async (eventId) => {
-        await axios.request({
-            url: `${API_ENDPOINT}/${CALENDAR_ID}/events/${eventId}?key=${API_KEY}`,
-            headers: {
-                Authorization: `Bearer ${sessionStorage.accessToken}`
-            },
-            method: 'DELETE'
-        }).then(
-            response => {
-                getEventList();
+                setEventData(groupBy(response.data.items, d => moment(d.start.dateTime).startOf(dayRange <= 7 ? "day" : "isoWeek")));
             },
             function (reason) {
                 console.log(reason);
@@ -60,7 +41,7 @@ function Calendar(props) {
 
     const handleModalClose = async () => {
         setModalOpen(false)
-        await getEventList()
+        await getEventList();
     }
 
     useEffect(() => {
@@ -98,33 +79,13 @@ function Calendar(props) {
                 </div>
                 {
                     eventData && (
-                        eventData.map(function (event) {
-                            return (
-                                <div>
-                                    <a
-                                        href={event.htmlLink}
-                                        target="_blank"
-                                        key={event.id}
-                                    >
-                                        {event.summary}
-                                    </a>
-                                    {" "}
-                                    <span className="badge">
-                                        {moment(event.start.dateTime).format("h:mm a")}{"-"}
-                                        {moment(event.end.dateTime).format("h:mm a")},{" "}
-                                        {moment(event.start.dateTime).format("MMMM Do")}{" "}
-                                    </span>
-
-                                    <button onClick={() => handleDelete(event.id)}>
-                                        DELETE
-                                </button>
-                                </div>
-                            )
-                        })
+                        <EventListSlider eventData={eventData} getData={getEventList} />
                     )
                 }
             </div>
-            {<AddEventModal open={modalOpen} onClose={handleModalClose} />}
+            <div>
+            </div>
+            {<AddEventModal open={modalOpen} onClose={handleModalClose} getData={getEventList} />}
         </>
     );
 }

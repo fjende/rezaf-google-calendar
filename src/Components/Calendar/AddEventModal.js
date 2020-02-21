@@ -11,7 +11,7 @@ import Button from '@material-ui/core/Button';
 import DateFnsUtils from '@date-io/date-fns';
 import axios from 'axios';
 
-function AddEventModal({ open, onClose, ...rest }) {
+function AddEventModal({ open, onClose, getData, ...rest }) {
 
     return (
         <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
@@ -35,9 +35,8 @@ function AddEventModal({ open, onClose, ...rest }) {
                                     },
                                 }
                             })
-                            .then(onClose)
-                            .catch(error => alert("Something went wrong, make sure you're not trying to travel through time!"))
-                            .finally(() => formikBag.resetForm());
+                            .then(onClose, getData, console.log('Addeding'))
+                            .catch(error => alert("Something went wrong, make sure you're not trying to travel through time!"));
                     }}
                     initialValues={{ title: '', start: new Date(), end: new Date() }}
                     validationSchema={ValidationSchema}
@@ -69,6 +68,7 @@ function AddEventModal({ open, onClose, ...rest }) {
                                         label="End"
                                         fullWidth
                                         value={formikProps.values.end}
+                                        minDate={formikProps.values.start}
                                         maxDate={formikProps.values.start}
                                         onChange={end => formikProps.setFieldValue('end', end)}
                                     />
@@ -86,7 +86,7 @@ function AddEventModal({ open, onClose, ...rest }) {
                     }}
                 ></Formik>
             </DialogContent>
-        </Dialog>
+        </Dialog >
     );
 }
 

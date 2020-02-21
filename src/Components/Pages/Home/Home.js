@@ -7,7 +7,6 @@ function Home(props) {
 
     return (
         <div>
-            <Nav />
             <Calendar />
         </div>
     );
