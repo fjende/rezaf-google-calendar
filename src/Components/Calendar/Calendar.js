@@ -11,12 +11,13 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
+var groupBy = require('lodash.groupby');
 
 function Calendar(props) {
 
     const [eventData, setEventData] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
-    const [dayRange, setDayRange] = useState(7)
+    const [dayRange, setDayRange] = useState(7);
 
     const getEventList = async () => {
         console.log(dayRange)
@@ -30,7 +31,8 @@ function Calendar(props) {
             method: 'GET'
         }).then(
             response => {
-                console.log(response.data.items)
+                console.log(response.data.items);
+                console.log(groupBy(response.data.items, d => moment(d.start.dateTime).startOf("isoWeek")));
                 setEventData(response.data.items);
             },
             function (reason) {
