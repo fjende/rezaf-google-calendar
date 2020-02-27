@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Login from './Components/Pages/Login/Login';
 import Home from './Components/Pages/Home/Home';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import './Styles/Css/App.css';
 
 const theme = createMuiTheme({
   typography: {

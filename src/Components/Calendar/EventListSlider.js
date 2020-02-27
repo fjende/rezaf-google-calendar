@@ -31,7 +31,7 @@ function EventListSlider({ eventData, getData, dayRange }) {
         if (step + 2 > maxSteps && step - 1 >= 0) {
             handleStepChange(step - 1);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventData])
 
     const handleNext = () => {
@@ -77,7 +77,7 @@ function EventListSlider({ eventData, getData, dayRange }) {
                                     )
                                 })}
                             </div>
-                        )) : <Typography> No scheduled events </Typography>}
+                        )) : <Typography> No scheduled events  </Typography>}
                     </SwipeableViews>
                 </Grid>
                 <Grid item xs>

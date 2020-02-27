@@ -1,11 +1,11 @@
 import React from 'react';
-import { Formik, Form, ErrorMessage } from 'formik';
+import { Formik, Form } from 'formik';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { DateTimePicker } from '@material-ui/pickers';
 import { API_KEY, CALENDAR_ID, API_ENDPOINT } from '../../Config'
 import { FormikTextField } from 'formik-material-fields';
 import { ValidationSchema } from './validation';
-import { Dialog, DialogContent, DialogActions, makeStyles, DialogTitle } from '@material-ui/core';
+import { Dialog, DialogContent, DialogActions, makeStyles } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import DateFnsUtils from '@date-io/date-fns';
 import axios from 'axios';
@@ -80,6 +80,8 @@ function AddEventModal({ open, onClose, getData, ...rest }) {
                                         fullWidth
                                         value={formikProps.values.end}
                                         maxDate={formikProps.values.start}
+                                        minDateMessage={`You can't end and event before you start it.`}
+                                        minDate={formikProps.values.start}
                                         onChange={end => formikProps.setFieldValue('end', end, true)}
                                         margin="normal"
                                     />
