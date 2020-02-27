@@ -7,7 +7,15 @@ import './Styles/Css/App.css';
 
 const theme = createMuiTheme({
   typography: {
-    fontSize: 20,
+    fontSize: 15,
+  },
+  palette: {
+    primary: {
+      main: '#000'
+    },
+    secondary: {
+      main: '#FFF'
+    }
   },
   shadows: ["none"]
 });

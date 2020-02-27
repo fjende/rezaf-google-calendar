@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import Event from './Event'
 import EventListSlider from './EventListSlider'
 import AddEventModal from './AddEventModal'
 import moment from 'moment'
 import { API_KEY, CALENDAR_ID, API_ENDPOINT } from '../../Config'
 import axios from 'axios';
-import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Grid from '@material-ui/core/Grid';
-import { Route, withRouter } from 'react-router';
+import IconButton from '@material-ui/core/IconButton';
+import AddIcon from '@material-ui/icons/Add';
+import { withRouter } from 'react-router';
 
 var groupBy = require('lodash.groupby');
 
@@ -22,14 +21,14 @@ const useStyles = makeStyles(theme => ({
         flexDirection: "column",
         justifyContent: "center",
         textAlign: "center",
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
+        height: "100vh"
     },
     select: {
-        fontSize: "20em"
+        fontSize: "35em",
+    },
+    addIcon: {
+        fontSize: "1em",
+        color: "#8BC34A"
     }
 }));
 
@@ -53,17 +52,13 @@ function Calendar(props) {
         }).then(
             response => {
                 setEventData(groupBy(response.data.items, d => moment(d.start.dateTime).startOf(dayRange <= 7 ? "day" : "isoWeek")));
-            },
-            function (error) {
-                console.log(error);
-                if (error.response.status === 401) {
-                    console.log('Unauthorized, token expired');
-                    sessionStorage.removeItem('loggedIn');
-                    sessionStorage.removeItem('accessToken');
-                    props.history.push('/');
-                }
             }
-        );
+        ).catch(error => {
+            console.log('Network or Authentication Error');
+            sessionStorage.removeItem('loggedIn');
+            sessionStorage.removeItem('accessToken');
+            props.history.push('/');
+        });
     }
 
     const handleModalClose = async () => {
@@ -73,6 +68,7 @@ function Calendar(props) {
 
     useEffect(() => {
         getEventList()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [dayRange])
 
     const handleRangeChange = async event => {
@@ -85,30 +81,41 @@ function Calendar(props) {
                 <Grid
                     container
                     direction="row"
-                    justify="space-evenly"
+                    justify="center"
                     justifyContent="center"
-                    alignItems="center"
-                >
-                    <Grid item xs>
+                    alignItems="center">
+                    <Grid item xs >
                         <FormControl >
                             <Select
                                 value={dayRange}
                                 onChange={handleRangeChange}
                                 disableUnderline={true}
-                                className={classes.select}>
+                                autoWidth={true}
+                                MenuProps={{
+                                    anchorOrigin: {
+                                        vertical: "center",
+                                        horizontal: "right"
+                                    },
+                                    getContentAnchorEl: null,
+                                }}
+                                className={classes.select}
+                            >
                                 <MenuItem value={1}>
                                     1
-                            </MenuItem>
+                                </MenuItem>
                                 <MenuItem value={7}>
                                     7
-                            </MenuItem>
+                                </MenuItem>
                                 <MenuItem value={30}>
                                     30
-                            </MenuItem>
+                                </MenuItem>
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs>
+                    <Grid item xs style={{ backgroundColor: 'white' }} >
+                        <IconButton aria-label="add" onClick={() => setModalOpen(true)}>
+                            <AddIcon className={classes.addIcon} />
+                        </IconButton>
                         {
                             eventData && (
                                 <EventListSlider eventData={eventData} getData={getEventList} dayRange={dayRange} />

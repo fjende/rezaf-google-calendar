@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react'
-import Nav from '../../Nav/Nav'
+import React from 'react'
 import Calendar from '../../Calendar/Calendar'
 
 function Home(props) {
-
 
     return (
         <div>

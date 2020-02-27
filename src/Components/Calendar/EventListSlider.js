@@ -1,14 +1,13 @@
 import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import MobileStepper from '@material-ui/core/MobileStepper';
 import Typography from '@material-ui/core/Typography';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import SwipeableViews from 'react-swipeable-views';
-import Grid from '@material-ui/core/Grid';
-import Event from './Event';
-import moment from 'moment';
 import IconButton from '@material-ui/core/IconButton';
+import Grid from '@material-ui/core/Grid';
+import SwipeableViews from 'react-swipeable-views';
+import Event from './Event';
+
 
 const useStyles = makeStyles(theme => ({
     button: {
@@ -27,10 +26,12 @@ function EventListSlider({ eventData, getData, dayRange }) {
 
     const classes = useStyles();
 
+
     useEffect(() => {
         if (step + 2 > maxSteps && step - 1 >= 0) {
             handleStepChange(step - 1);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [eventData])
 
     const handleNext = () => {
@@ -50,7 +51,6 @@ function EventListSlider({ eventData, getData, dayRange }) {
             <Grid
                 container
                 direction="row"
-                justify="center"
                 justify="space-evenly"
                 alignItems="center"
             >
@@ -77,7 +77,7 @@ function EventListSlider({ eventData, getData, dayRange }) {
                                     )
                                 })}
                             </div>
-                        )) : <Typography> No events scheduled for {new Date().toLocaleDateString()} </Typography>}
+                        )) : <Typography> No scheduled events </Typography>}
                     </SwipeableViews>
                 </Grid>
                 <Grid item xs>
@@ -85,6 +85,7 @@ function EventListSlider({ eventData, getData, dayRange }) {
                         <KeyboardArrowRight className={classes.largeIcon} />
                     </IconButton>
                 </Grid>
+
             </Grid>
         </div>
     );

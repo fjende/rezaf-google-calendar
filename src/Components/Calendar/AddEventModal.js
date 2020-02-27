@@ -1,20 +1,28 @@
-import React, { useEffect } from 'react'
-import { Formik, Form } from 'formik';
+import React from 'react';
+import { Formik, Form, ErrorMessage } from 'formik';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { KeyboardDateTimePicker } from '@material-ui/pickers';
+import { DateTimePicker } from '@material-ui/pickers';
 import { API_KEY, CALENDAR_ID, API_ENDPOINT } from '../../Config'
 import { FormikTextField } from 'formik-material-fields';
 import { ValidationSchema } from './validation';
-import { Dialog, DialogContent, DialogActions, makeStyles } from '@material-ui/core'
-import DialogTitle from '@material-ui/core/DialogTitle';
+import { Dialog, DialogContent, DialogActions, makeStyles, DialogTitle } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import DateFnsUtils from '@date-io/date-fns';
 import axios from 'axios';
 
+const useStyles = makeStyles(theme => ({
+    form: {
+        width: '100%',
+        marginTop: '10px',
+    }
+}));
+
 function AddEventModal({ open, onClose, getData, ...rest }) {
 
+    const classes = useStyles();
+
     return (
-        <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
+        <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title" c>
             <DialogContent>
                 <Formik
                     onSubmit={(values, formikBag) => {
@@ -35,7 +43,7 @@ function AddEventModal({ open, onClose, getData, ...rest }) {
                                     },
                                 }
                             })
-                            .then(onClose, getData, console.log('Addeding'))
+                            .then(onClose, getData, console.log('Adding new Event'))
                             .catch(error => alert("Something went wrong, make sure you're not trying to travel through time!"));
                     }}
                     initialValues={{ title: '', start: new Date(), end: new Date() }}
@@ -43,41 +51,44 @@ function AddEventModal({ open, onClose, getData, ...rest }) {
                     render={formikProps => {
                         return (
                             <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                                <Form>
+                                <Form className={classes.form}>
                                     <FormikTextField
                                         autoComplete="title"
                                         name="title"
                                         variant="outlined"
                                         fullWidth
-                                        label="Add title..."
+                                        label="Title"
                                         autoFocus
                                         value={formikProps.values.title}
+                                        margin="normal"
                                     />
-                                    <KeyboardDateTimePicker
+                                    <DateTimePicker
+                                        disablePast
                                         ampm={false}
                                         inputVariant="outlined"
                                         label="Start"
                                         fullWidth
                                         value={formikProps.values.start}
-                                        onChange={start => formikProps.setFieldValue('start', start)}
+                                        onChange={start => formikProps.setFieldValue('start', start, true)}
+                                        margin="normal"
                                     />
-                                    <KeyboardDateTimePicker
+                                    <DateTimePicker
                                         disablePast
                                         ampm={false}
                                         inputVariant="outlined"
                                         label="End"
                                         fullWidth
                                         value={formikProps.values.end}
-                                        minDate={formikProps.values.start}
                                         maxDate={formikProps.values.start}
-                                        onChange={end => formikProps.setFieldValue('end', end)}
+                                        onChange={end => formikProps.setFieldValue('end', end, true)}
+                                        margin="normal"
                                     />
                                     <DialogActions>
                                         <Button onClick={onClose} color="primary">
                                             Cancel
                                     </Button>
                                         <Button type="submit" color="primary">
-                                            Save
+                                            Add
                                     </Button>
                                     </DialogActions>
                                 </Form>
