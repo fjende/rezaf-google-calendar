@@ -1,2 +1,2 @@
 # rezaf-google-calendar
-React Engineer Zadatak @ Ars Futura - Google Calendar
+Google Calendar Api React
