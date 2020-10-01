@@ -1,2 +1,2 @@
 # rezaf-google-calendar
-Google Calendar Api React
+Simple Google Calendar Api React Application
